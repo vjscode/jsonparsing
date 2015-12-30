@@ -22,8 +22,8 @@ public class LoganSquareJSONParser extends JSONParser {
     @Override
     protected void parse() {
         try {
-            String strJSON = readFile("sample1.json");
             long startTime = System.nanoTime();
+            String strJSON = readFile("sample1.json");
             Place response = LoganSquare.parse(strJSON, Place.class);
             Log.d("test", "LS time taken: " + (System.nanoTime() - startTime));
         } catch (Exception e) {

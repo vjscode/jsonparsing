@@ -21,7 +21,6 @@ public class GSONJSONParser extends JSONParser {
 
     @Override
     protected void parse() {
-        Log.d("test", "gson parse");
         try {
             long startTime = System.nanoTime();
             Place[] response = new Gson().fromJson(getReader("sample1.json"), Place[].class);

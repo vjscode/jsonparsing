@@ -2,7 +2,6 @@ package json.jsonparsing.parser;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,7 +22,6 @@ public class JSONParser extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        Log.d("test", "doinbkg..");
         parse();
         return null;
     }
@@ -49,7 +47,6 @@ public class JSONParser extends AsyncTask<Void, Void, Void> {
         try {
             InputStream json = context.getAssets().open(filename);
             BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
-            Log.d("test", "in: " + in);
             return in;
         } catch (Exception e) {
             e.printStackTrace();
