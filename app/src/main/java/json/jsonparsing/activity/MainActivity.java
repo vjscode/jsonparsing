@@ -1,17 +1,25 @@
 package json.jsonparsing.activity;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
 import json.jsonparsing.R;
+import json.jsonparsing.model.Country;
 import json.jsonparsing.parser.GSONJSONParser;
 import json.jsonparsing.parser.LoganSquareJSONParser;
+import json.jsonparsing.rest.RestManager;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,12 +34,57 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "No-op. Please check logs for results", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                makeRestCall();
             }
         });
         new LoganSquareJSONParser(this).execute();
         new GSONJSONParser(this).execute();
+    }
+
+    private void makeRestCall() {
+        Log.d("test", "makeRestCall");
+        final long startTime = SystemClock.elapsedRealtimeNanos();
+        //Use GSON with default type adapter which uses reflection
+        RestManager.getCountriesInfo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<List<Country>>() {
+                               @Override
+                               public void onCompleted() {
+                                   Log.d("test", "completed reflection: " + (SystemClock.elapsedRealtimeNanos() - startTime));
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+
+                               }
+
+                               @Override
+                               public void onNext(List<Country> countries) {
+                               }
+                           }
+        );
+
+        //Use GSON with custom type adapter without reflection
+        RestManager.getCountriesInfoWithCustomTypeAdapters()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<List<Country>>() {
+                               @Override
+                               public void onCompleted() {
+                                   Log.d("test", "completed no reflection: " + (SystemClock.elapsedRealtimeNanos() - startTime));
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+
+                               }
+
+                               @Override
+                               public void onNext(List<Country> countries) {
+                               }
+                           }
+                );
     }
 
     @Override
