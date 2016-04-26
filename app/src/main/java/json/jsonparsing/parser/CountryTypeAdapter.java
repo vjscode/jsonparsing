@@ -1,5 +1,7 @@
 package json.jsonparsing.parser;
 
+import android.util.Log;
+
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -29,6 +31,7 @@ public class CountryTypeAdapter extends TypeAdapter {
         out.name("timezones").value(flattenList(country.getTimeZones()));
         out.name("borders").value(flattenList(country.getBorders()));
         out.endObject();
+        Log.d("test", "country: " + country);
     }
 
     private String flattenList(List<String> list) {
@@ -65,9 +68,11 @@ public class CountryTypeAdapter extends TypeAdapter {
                     country.setDemonym(in.nextString());
                     break;
                 case "timezones":
+                    Log.d("test", "timezone: " + in.nextString());
                     country.setTimeZones(unflatten(in.nextString()));
                     break;
                 case "borders":
+                    Log.d("test", "borders: " + in.nextString());
                     country.setBorders(unflatten(in.nextString()));
                     break;
             }

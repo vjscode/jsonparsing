@@ -13,7 +13,7 @@ import android.view.View;
 import java.util.List;
 
 import json.jsonparsing.R;
-import json.jsonparsing.model.Country;
+import json.jsonparsing.model.Photo;
 import json.jsonparsing.parser.GSONJSONParser;
 import json.jsonparsing.parser.LoganSquareJSONParser;
 import json.jsonparsing.rest.RestManager;
@@ -44,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private void makeRestCall() {
         Log.d("test", "makeRestCall");
         final long startTime = SystemClock.elapsedRealtimeNanos();
+
         //Use GSON with default type adapter which uses reflection
-        RestManager.getCountriesInfo()
+        RestManager.getPhotos()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<List<Country>>() {
+                .subscribe(new Subscriber<List<Photo>>() {
                                @Override
                                public void onCompleted() {
                                    Log.d("test", "completed reflection: " + (SystemClock.elapsedRealtimeNanos() - startTime));
@@ -60,19 +61,20 @@ public class MainActivity extends AppCompatActivity {
                                }
 
                                @Override
-                               public void onNext(List<Country> countries) {
+                               public void onNext(List<Photo> countries) {
                                }
                            }
-        );
+                );
 
         //Use GSON with custom type adapter without reflection
-        RestManager.getCountriesInfoWithCustomTypeAdapters()
+        final long startTimeNoRefl = SystemClock.elapsedRealtimeNanos();
+        RestManager.getPhotosWithCustomTypeAdapters()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<List<Country>>() {
+                .subscribe(new Subscriber<List<Photo>>() {
                                @Override
                                public void onCompleted() {
-                                   Log.d("test", "completed no reflection: " + (SystemClock.elapsedRealtimeNanos() - startTime));
+                                   Log.d("test", "completed no reflection: " + (SystemClock.elapsedRealtimeNanos() - startTimeNoRefl));
                                }
 
                                @Override
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                }
 
                                @Override
-                               public void onNext(List<Country> countries) {
+                               public void onNext(List<Photo> countries) {
                                }
                            }
                 );
